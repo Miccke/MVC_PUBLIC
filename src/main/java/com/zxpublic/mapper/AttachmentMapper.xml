@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.AttachmentDao">
+	<resultMap id="BaseResultMap" type="com.zxpublic.vo.Attachment" >
+	    <id column="attachId" jdbcType="INTEGER" property="attachId"  />
+	    <result column="baseDir" jdbcType="VARCHAR" property="baseDir" />
+	    <result column="attachname" jdbcType="VARCHAR" property="attachname"  />
+	    <result column="filesize" jdbcType="INTEGER" property="filesize"  />
+	    <result column="attachment" jdbcType="VARCHAR" property="attachment"  />
+	    <result column="attachtype" jdbcType="VARCHAR" property="attachtype"  />
+	    <result column="operName" jdbcType="VARCHAR" property="operName" />
+	    <result column="operId" jdbcType="VARCHAR" property="operId" />
+	    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+	    <result column="memo" jdbcType="VARCHAR" property="memo"  />
+	</resultMap>
+	
+	<!-- <select id="listAll" resultType="com.zxpublic.vo.Attachment">
+		select * from tb_attachment_t
+	</select> -->
+	<insert id="insertAttachment" parameterType="com.zxpublic.vo.Attachment" useGeneratedKeys="true" keyProperty="attachId">
+	    insert into tb_attachment_t 
+	     (baseDir,attachname, 
+	      filesize, attachment, attachtype,
+	      operName, operId, createtime,memo)
+	    values (#{baseDir,jdbcType=VARCHAR}, #{attachname,jdbcType=VARCHAR}, 
+	      #{filesize,jdbcType=INTEGER}, #{attachment,jdbcType=VARCHAR}, #{attachtype,jdbcType=VARCHAR}, 
+	      #{operName,jdbcType=VARCHAR}, #{operId,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
+	      #{memo,jdbcType=VARCHAR})
+
+	</insert>
+	
+	 <select id="get" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.Attachment">
+	     select * from tb_attachment_t t where t.attachId = #{attachId}
+	 </select>
+</mapper>  

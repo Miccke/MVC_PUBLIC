@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zxpublic.dao.SWaiterMessageDao" >
+  <resultMap id="BaseResultMap" type="com.zxpublic.vo.SWaiterMessage" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="waiter_no" jdbcType="VARCHAR" property="waiterNo" />
+    <result column="waiter_type" jdbcType="INTEGER" property="waiterType" />
+    <result column="waiter_name" jdbcType="VARCHAR" property="waiterName" />
+    <result column="waiter_imageurl" jdbcType="VARCHAR" property="waiterImageurl" />
+    <result column="waiter_idcard" jdbcType="VARCHAR" property="waiterIdcard" />
+    <result column="waiter_price" jdbcType="BIGINT" property="waiterPrice" />
+    <result column="waiter_age" jdbcType="INTEGER" property="waiterAge" />
+    <result column="waiter_province" jdbcType="VARCHAR" property="waiterProvince" />
+    <result column="waiter_city" jdbcType="VARCHAR" property="waiterCity" />
+    <result column="waiter_babycount" jdbcType="INTEGER" property="waiterBabycount" />
+    <result column="waiter_characteristics" jdbcType="VARCHAR" property="waiterCharacteristics" />
+    <result column="waiter_platform_msg" jdbcType="VARCHAR" property="waiterPlatformMsg" />
+    <result column="waiter_experience" jdbcType="VARCHAR" property="waiterExperience" />
+    <result column="waiter_constellation" jdbcType="VARCHAR" property="waiterConstellation" />
+    <result column="waiter_starlevel" jdbcType="INTEGER" property="waiterStarlevel" />
+    <result column="waiter_education" jdbcType="INTEGER" property="waiterEducation" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+    <result column="attachId" property="attachId" jdbcType="VARCHAR" />
+    <result column="job_title" property="jobTitle" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, waiter_no, waiter_name, waiter_imageurl, waiter_idcard, waiter_price, waiter_age, 
+    waiter_nativeplace, waiter_babycount, waiter_characteristics, waiter_platform_msg, 
+    waiter_experience, remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.SWaiterMessage" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_waiter_message_t
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_waiter_message_t
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_waiter_message_t
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zxpublic.vo.SWaiterMessage" >
+    delete from tb_waiter_message_t
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.zxpublic.vo.SWaiterMessage" >
+    insert into tb_waiter_message_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="waiterNo != null" >
+        waiter_no,
+      </if>
+      <if test="waiterName != null" >
+        waiter_name,
+      </if>
+      <if test="waiterImageurl != null" >
+        waiter_imageurl,
+      </if>
+      <if test="waiterIdcard != null" >
+        waiter_idcard,
+      </if>
+      <if test="waiterPrice != null" >
+        waiter_price,
+      </if>
+      <if test="waiterAge != null" >
+        waiter_age,
+      </if>
+      <if test="waiterNativeplace != null" >
+        waiter_nativeplace,
+      </if>
+      <if test="waiterBabycount != null" >
+        waiter_babycount,
+      </if>
+      <if test="waiterCharacteristics != null" >
+        waiter_characteristics,
+      </if>
+      <if test="waiterPlatformMsg != null" >
+        waiter_platform_msg,
+      </if>
+      <if test="waiterExperience != null" >
+        waiter_experience,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="waiterNo != null" >
+        #{waiterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterName != null" >
+        #{waiterName,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterImageurl != null" >
+        #{waiterImageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterIdcard != null" >
+        #{waiterIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterPrice != null" >
+        #{waiterPrice,jdbcType=BIGINT},
+      </if>
+      <if test="waiterAge != null" >
+        #{waiterAge,jdbcType=INTEGER},
+      </if>
+      <if test="waiterNativeplace != null" >
+        #{waiterNativeplace,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterBabycount != null" >
+        #{waiterBabycount,jdbcType=INTEGER},
+      </if>
+      <if test="waiterCharacteristics != null" >
+        #{waiterCharacteristics,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterPlatformMsg != null" >
+        #{waiterPlatformMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterExperience != null" >
+        #{waiterExperience,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zxpublic.vo.SWaiterMessage" resultType="java.lang.Integer" >
+    select count(*) from tb_waiter_message_t
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tb_waiter_message_t
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.waiterNo != null" >
+        waiter_no = #{record.waiterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waiterName != null" >
+        waiter_name = #{record.waiterName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waiterImageurl != null" >
+        waiter_imageurl = #{record.waiterImageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waiterIdcard != null" >
+        waiter_idcard = #{record.waiterIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waiterPrice != null" >
+        waiter_price = #{record.waiterPrice,jdbcType=BIGINT},
+      </if>
+      <if test="record.waiterAge != null" >
+        waiter_age = #{record.waiterAge,jdbcType=INTEGER},
+      </if>
+      <if test="record.waiterNativeplace != null" >
+        waiter_nativeplace = #{record.waiterNativeplace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waiterBabycount != null" >
+        waiter_babycount = #{record.waiterBabycount,jdbcType=INTEGER},
+      </if>
+      <if test="record.waiterCharacteristics != null" >
+        waiter_characteristics = #{record.waiterCharacteristics,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waiterPlatformMsg != null" >
+        waiter_platform_msg = #{record.waiterPlatformMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waiterExperience != null" >
+        waiter_experience = #{record.waiterExperience,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tb_waiter_message_t
+    set id = #{record.id,jdbcType=BIGINT},
+      waiter_no = #{record.waiterNo,jdbcType=VARCHAR},
+      waiter_name = #{record.waiterName,jdbcType=VARCHAR},
+      waiter_imageurl = #{record.waiterImageurl,jdbcType=VARCHAR},
+      waiter_idcard = #{record.waiterIdcard,jdbcType=VARCHAR},
+      waiter_price = #{record.waiterPrice,jdbcType=BIGINT},
+      waiter_age = #{record.waiterAge,jdbcType=INTEGER},
+      waiter_nativeplace = #{record.waiterNativeplace,jdbcType=VARCHAR},
+      waiter_babycount = #{record.waiterBabycount,jdbcType=INTEGER},
+      waiter_characteristics = #{record.waiterCharacteristics,jdbcType=VARCHAR},
+      waiter_platform_msg = #{record.waiterPlatformMsg,jdbcType=VARCHAR},
+      waiter_experience = #{record.waiterExperience,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zxpublic.vo.SWaiterMessage" >
+    update tb_waiter_message_t
+    set waiter_no = #{waiterNo,jdbcType=VARCHAR},
+      waiter_name = #{waiterName,jdbcType=VARCHAR},
+      waiter_imageurl = #{waiterImageurl,jdbcType=VARCHAR},
+      waiter_idcard = #{waiterIdcard,jdbcType=VARCHAR},
+      waiter_price = #{waiterPrice,jdbcType=BIGINT},
+      waiter_age = #{waiterAge,jdbcType=INTEGER},
+      waiter_nativeplace = #{waiterNativeplace,jdbcType=VARCHAR},
+      waiter_babycount = #{waiterBabycount,jdbcType=INTEGER},
+      waiter_characteristics = #{waiterCharacteristics,jdbcType=VARCHAR},
+      waiter_platform_msg = #{waiterPlatformMsg,jdbcType=VARCHAR},
+      waiter_experience = #{waiterExperience,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 插入信息 -->
+  <insert id="insertWaiter" parameterType="com.zxpublic.vo.SWaiterMessage" >
+    insert into tb_waiter_message_t (waiter_no, waiter_name, 
+      waiter_imageurl, waiter_idcard, waiter_price, 
+      waiter_age, waiter_province,waiter_city, waiter_babycount, 
+      waiter_characteristics, waiter_platform_msg, waiter_type,
+      waiter_experience, waiter_constellation,waiter_starlevel,waiter_education,remark,job_title)
+    values ( #{waiterNo,jdbcType=VARCHAR}, #{waiterName,jdbcType=VARCHAR}, 
+      #{waiterImageurl,jdbcType=VARCHAR}, #{waiterIdcard,jdbcType=VARCHAR}, #{waiterPrice,jdbcType=BIGINT}, 
+      #{waiterAge,jdbcType=INTEGER}, #{waiterProvince,jdbcType=VARCHAR},#{waiterCity,jdbcType=VARCHAR}, #{waiterBabycount,jdbcType=INTEGER}, 
+      #{waiterCharacteristics,jdbcType=VARCHAR}, #{waiterPlatformMsg,jdbcType=VARCHAR},#{waiterType,jdbcType=INTEGER},
+      #{waiterExperience,jdbcType=VARCHAR},#{waiterConstellation,jdbcType=VARCHAR}, #{waiterStarlevel,jdbcType=INTEGER},
+      #{waiterEducation,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR},#{jobTitle,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 更新信息 -->
+  <update id="updateWaiter" parameterType="com.zxpublic.vo.SWaiterMessage" >
+    update tb_waiter_message_t
+    <set >
+      <if test="waiterNo != null" >
+        waiter_no = #{waiterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterName != null" >
+        waiter_name = #{waiterName,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterImageurl != null" >
+        waiter_imageurl = #{waiterImageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterIdcard != null" >
+        waiter_idcard = #{waiterIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterPrice != null" >
+        waiter_price = #{waiterPrice,jdbcType=BIGINT},
+      </if>
+      <if test="waiterAge != null" >
+        waiter_age = #{waiterAge,jdbcType=INTEGER},
+      </if>
+      <if test="waiterProvince != ''">
+		waiter_province = #{waiterProvince,jdbcType=VARCHAR}
+	  </if>
+	  <if test="waiterCity != null">
+		waiter_city = #{waiterCity,jdbcType=VARCHAR}
+      </if>
+      <if test="waiterBabycount != null" >
+        waiter_babycount = #{waiterBabycount,jdbcType=INTEGER},
+      </if>
+      <if test="waiterCharacteristics != null" >
+        waiter_characteristics = #{waiterCharacteristics,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterPlatformMsg != null" >
+        waiter_platform_msg = #{waiterPlatformMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterExperience != null" >
+        waiter_experience = #{waiterExperience,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="waiterConstellation != null">
+		waiter_constellation = #{waiterConstellation,jdbcType=VARCHAR}
+	  </if>
+	  <if test="waiterStarlevel != null">
+		waiter_starlevel = #{waiterStarlevel,jdbcType=INTEGER}
+	  </if>
+	  <if test="waiterEducation != null">
+		 waiter_education = #{waiterEducation,jdbcType=INTEGER}
+	  </if>
+	  <if test="jobTitle != null">
+		 job_title = #{jobTitle,jdbcType=INTEGER}
+	  </if>
+      <if test="waiterType != null">
+          waiter_type = #{waiterType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 删除服务人员信息（软删除） -->
+  <update id="deleteMsgById" parameterType="com.zxpublic.vo.SWaiterMessage">
+      update tb_waiter_message_t t set  t.delete_flag = 1 where t.id =  #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 通过ID查询信息 -->
+  <select id="get" parameterType="com.zxpublic.vo.Attachment" resultMap="BaseResultMap">
+      select t.*,(select group_concat(rt.relation_id separator ',') from tb_waiter_relation_t rt where rt.waiter_id = t.id and rt.type = 2) as attachId 
+ 	from tb_waiter_message_t t where t.id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 通过条件查询信息集合 -->
+  <select id="getMsgList" parameterType="com.zxpublic.vo.SWaiterMessage" resultMap="BaseResultMap" >
+      select * from tb_waiter_message_t t where 1=1
+       <if test=" null != waiterName and '' != waiterName">
+           and waiter_name like concat('%',#{waiterName},'%')
+       </if>
+       <if test=" null != waiterAge and '' != waiterAge">
+           and waiter_age = #{waiterAge}
+       </if>
+       and delete_flag = 0
+       limit #{startIndex},#{pageSize}
+  </select>
+  <!--查询总记录条数-->
+  <select id="getMsgListCount" resultType="int" parameterType="com.zxpublic.vo.SWaiterMessage">
+       select count(1) from tb_waiter_message_t
+        where 1=1 
+       <if test=" null != waiterName and '' != waiterName">
+           and waiter_name like concat('%',#{waiterName},'%')
+       </if>
+       <if test=" null != waiterAge and '' != waiterAge">
+           and waiter_age = #{waiterAge}
+       </if>
+       and delete_flag = 0
+        <!--<if test=" null != servetype and '' != servetype">
+             AND servetype = #{servetype} 
+        </if>
+         <if test=" null != username and '' != username">
+             AND userName like concat('%',#{username},'%')
+        </if>
+         <if test=" null != servestate and '' != servestate">
+             AND serveState = #{servestate} 
+        </if>
+	          <if test=" null != content and '' != content">
+	             AND d.dish_name like concat('%',#{content},'%') 
+	        </if> -->
+  </select>
+  <!-- 据waiterNo返回相应的waiter信息（认证）  -->
+  <select id="getSWaiterByNo1" resultMap="BaseResultMap" parameterType="java.lang.String">
+      select 
+			tw.*,group_concat(ta.attachId) AS attachId
+		from 
+			tb_attachment_t ta,
+			tb_waiter_message_t tw,
+			tb_waiter_relation_t tr
+		where 
+			ta.attachId = tr.relation_id 
+			and tw.id = tr.waiter_id 
+			and tr.type = 1
+			and tw.waiter_no = #{waiterNo,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 据waiterNo返回相应的waiter工作照-->
+  <select id="getSWaiterByNo2" resultMap="BaseResultMap" parameterType="java.lang.String">
+      select 
+			group_concat(ta.attachId) AS attachId
+		from 
+			tb_attachment_t ta,
+			tb_waiter_message_t tw,
+			tb_waiter_relation_t tr
+		where 
+			ta.attachId = tr.relation_id 
+			and tw.id = tr.waiter_id 
+			and tr.type = 2
+			and tw.waiter_no = #{waiterNo,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 据waiterType返回相应的waiter信息 
+  <select id="getSWaiterByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+      select * from tb_waiter_message_t where waiter_type = #{waiterType,jdbcType=INTEGER} ORDER BY waiter_no asc
+  </select> --> 
+  
+  <!-- 据waiterType返回相应的waiter信息  --> 
+  <select id="getSWaiterByType1" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.SWaiterMessage">
+      select * 
+      from
+      	  	tb_waiter_message_t 
+      where 1=1
+			<if test="waiterAge != null">
+			       <if test="waiterAge == 1">
+			           and waiter_age between  0 and  30
+			       </if>
+			       <if test="waiterAge == 30">
+			           and waiter_age between  31 and  35
+			       </if>
+			       <if test="waiterAge == 35">
+			           and waiter_age between  36 and  40
+			       </if>
+			       <if test="waiterAge == 40">
+			           and waiter_age between  41 and  45
+			       </if>
+			       <if test="waiterAge == 45">
+			           and waiter_age between  46 and  50
+			       </if>
+			       <if test="waiterAge == 51">
+			           and waiter_age > 50
+			       </if>
+		    </if> 
+	        <if test="waiterProvince != ''">
+		        and waiter_province = #{waiterProvince,jdbcType=VARCHAR}
+		    </if>
+		    <if test="waiterCity != null">
+		        and waiter_city = #{waiterCity,jdbcType=VARCHAR}
+		    </if>
+      		<if test="waiterConstellation != null">
+		        and waiter_constellation = #{waiterConstellation,jdbcType=VARCHAR}
+		    </if>
+		    <if test="waiterStarlevel != null">
+		        and waiter_starlevel = #{waiterStarlevel,jdbcType=INTEGER}
+		    </if>
+		    <if test="waiterEducation != null">
+		        and waiter_education = #{waiterEducation,jdbcType=INTEGER}
+		    </if>  
+	        <if test="waiterType != null">
+		        and waiter_type = #{waiterType,jdbcType=INTEGER}
+		    </if>
+		    and delete_flag = 0
+     ORDER BY waiter_no asc
+  </select>
+  <!-- 模糊查询 -->
+  <select id="getLikeList" parameterType="com.zxpublic.vo.SWaiterMessage" resultMap="BaseResultMap">
+      select * from tb_waiter_message_t
+      <where>  
+        <choose>  
+            <when test="waiterType !=null ">  
+                waiter_type = #{waiterType,jdbcType=INTEGER}  and delete_flag = 0
+        <!--    waiter_type LIKE CONCAT(CONCAT('%', #{waiterType, jdbcType=VARCHAR}),'%')  --> 
+            </when >   
+            <when test="waiterName != null ">  
+                waiter_name = #{waiterName,jdbcType=VARCHAR}   and delete_flag = 0
+            </when >  
+            <otherwise>  
+                1=2 
+            </otherwise>  
+        </choose>  
+    </where>    
+  </select>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.UserDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.zxpublic.vo.User">
+		<result column="uid" property="uid" jdbcType="INTEGER" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="password" property="passWord"	jdbcType="VARCHAR" />
+		<result column="uage" property="uAge" jdbcType="VARCHAR" />
+		<result column="usex" property="uSex" jdbcType="VARCHAR"/>
+		<result column="utype" property="uType" jdbcType="INTEGER"/>
+		<result column="ue_mail" property="uEMail" jdbcType="VARCHAR" />
+		<result column="mobilphone" property="mobilphone" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="longitudex" property="longitudex" jdbcType="VARCHAR" />
+		<result column="latitudey" property="latitudey" jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- 查询单条记录 -->
+	<select id="selectUserById" parameterType="int" resultMap="BaseResultMap">
+		SELECT * FROM t_user WHERE USER_ID = #{userId}
+	</select>
+	<select id="login" parameterType="com.zxpublic.vo.User"	resultMap="BaseResultMap">
+		select * from tb_user_t where login_name=#{loginName}
+	</select>
+
+
+	<select id="listAll" resultType="com.zxpublic.vo.User">
+		select * from person
+	</select>
+
+	<insert id="addRecord" parameterType="com.zxpublic.vo.User">
+		insert into person
+		values(date_format(Now(),'%Y%m%d%H%i%s'),#{username,jdbcType=CHAR},#{age,jdbcType=CHAR},#{gender,jdbcType=CHAR});
+	</insert>
+
+	<insert id="saveOrUpdate" parameterType="com.zxpublic.vo.User">
+		insert into person(id,username,age,gender)
+		values(#{id,jdbcType=CHAR},#{username,jdbcType=CHAR},#{age,jdbcType=CHAR},date_format(Now(),'%Y%m%d%H%i%s'))
+		ON DUPLICATE KEY UPDATE
+		username=#{username,jdbcType=CHAR},age=#{age,jdbcType=CHAR},gender=date_format(Now(),'%Y%m%d%H%i%s');
+	</insert>
+	<update id="updatepwd" parameterType="com.zxpublic.vo.User">
+	    UPDATE tb_user_t set password = #{passWord}
+	     where 1 = 1 
+	    <if test="uid != null" >
+	        and uid = #{uid}
+	    </if>
+	    <if test="loginName != null" >
+	        and login_name = #{loginName}
+	    </if>
+	</update>
+	<select id='getDetail' resultType='com.zxpublic.vo.User' parameterType="java.lang.String">
+		select userName,age,gender from person where
+		id=#{id,jdbcType=VARCHAR};
+	</select>
+
+	    <!--查询操作记录-->
+    <select id="queryUserList" parameterType="com.zxpublic.vo.User"  resultMap="BaseResultMap">
+        SELECT * FROM tb_user_t 
+        WHERE 1 = 1
+        <if test=" null != loginName and '' != loginName">
+            AND login_name = #{loginName}
+        </if>
+          limit #{startIndex},#{pageSize}
+        <!--startIndex开始页 ， pageSize每页显示的记录条数-->
+    </select>
+
+    <!--查询总记录条数-->
+    <select id="queryUserListCount" resultType="int" parameterType="com.zxpublic.vo.User">
+        select count(1) from tb_user_t where 1=1
+        <if test=" null != loginName and '' != loginName">
+            AND login_name = #{loginName}
+        </if>
+    </select>
+    
+    <select id="selectByUid" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select * from tb_user_t where uid=#{uid,jdbcType=INTEGER}
+	</select>
+	<!-- 新增 -->
+	<select id="selectByUtype1" resultMap="BaseResultMap">
+		select * from tb_user_t where uType = 1
+	</select>
+	<select id="get" parameterType="java.lang.Long" resultMap="BaseResultMap">
+	    select * from tb_user_t where 1=1 and uid = #{id}
+	</select>
+	
+	<update id="updateMsg" parameterType="com.zxpublic.vo.User">
+	    UPDATE tb_user_t t 
+	     <set >
+	      <if test="nickName != null" >
+	        t.nick_name = #{nickName},
+	      </if>
+	      <if test="uAge != null" >
+	        t.uage = #{uAge},
+	      </if>
+	      <if test="uEMail != null" >
+	        t.ue_mail = #{uEMail},
+	      </if>
+	      <if test="mobilphone != null" >
+	        t.mobilphone = #{mobilphone},
+	      </if>
+	      <if test="telephone != null" >
+	        telephone = #{telephone},
+	      </if>
+	      <if test="address != null" >
+	        address = #{address},
+	      </if>
+	      <if test="longitudex != null" >
+	        longitudex = #{longitudex},
+	      </if>
+	      <if test="latitudey != null" >
+	        latitudey = #{latitudey},
+	      </if>
+	      <if test="imageUrl != null" >
+	        image_url = #{imageUrl},
+	      </if>
+	    </set>
+	    <if test="uid != null" >
+	      where t.uid =  #{uid}
+	    </if>
+		<!-- <result column="usex" property="uSex" jdbcType="CHAR"/> -->
+	</update>
+	<insert id="insertUser" parameterType="com.zxpublic.vo.User" useGeneratedKeys="true" keyProperty="uid">
+	    insert into tb_user_t (login_name, nick_name, 
+	      password, utype, uage, 
+	      usex, ue_mail, mobilphone, 
+	      telephone, address, longitudex, 
+	      latitudey, image_url)
+	    values (#{loginName,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+	      #{passWord,jdbcType=VARCHAR}, #{uType,jdbcType=INTEGER}, #{uAge,jdbcType=INTEGER}, 
+	      #{uSex,jdbcType=VARCHAR}, #{uEMail,jdbcType=VARCHAR}, #{mobilphone,jdbcType=DECIMAL}, 
+	      #{telephone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{longitudex,jdbcType=VARCHAR}, 
+	      #{latitudey,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR})
+	</insert>
+	
+</mapper>  

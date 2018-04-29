@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.StoreInfoDao">
+	<resultMap id="BaseResultMap" type="com.zxpublic.vo.StoreInfo">
+	       	<id column="store_id" property="storeId" jdbcType="INTEGER" />
+		    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+		    <result column="store_url" property="storeUrl" jdbcType="VARCHAR" />
+		    <result column="store_phone" property="storePhone" jdbcType="BIGINT" />
+		    <result column="store_address" property="storeAddress" jdbcType="VARCHAR" />
+		    <result column="review_star" property="reviewStar" jdbcType="INTEGER" />
+		    <result column="sales_volume" property="salesVolume" jdbcType="INTEGER" />
+		    <result column="minimum" property="minimum" jdbcType="INTEGER" />
+		    <result column="delivery_cost" property="deliveryCost" jdbcType="INTEGER" />
+		    <result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
+		    <result column="uid" property="uid" jdbcType="INTEGER" />
+		    <result column="longitudex" property="longitudex" jdbcType="VARCHAR" />
+		    <result column="latitudey" property="latitudey" jdbcType="VARCHAR" />
+		    <result column="distance" property="distance" jdbcType="DOUBLE" />
+		    <result column="opening_start" property="openingStart" jdbcType="TIMESTAMP" />
+		    <result column="opening_end" property="openingEnd" jdbcType="TIMESTAMP" />
+    	    <result column="code_num" property="codeNum" jdbcType="INTEGER" /> 
+	  </resultMap>
+    
+	<select id="listAll" resultMap="BaseResultMap">
+		select * from tb_store_info where code_num = 1
+	</select>
+
+	<select id="selectByStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select * from tb_store_info  where store_id = #{storeId,jdbcType=INTEGER} 
+	  </select>
+	
+	<select id="selectByUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select * from tb_store_info  where uid = #{uid,jdbcType=INTEGER}
+	  </select>
+	  
+	<insert id="insertStore" parameterType="com.zxpublic.vo.StoreInfo"  useGeneratedKeys="true" keyProperty="storeId">
+	    insert into tb_store_info (store_name, store_url, 
+	      store_phone, store_address, review_star, 
+	      sales_volume, minimum, delivery_cost, 
+	      legal_person, uid, longitudex, 
+	      latitudey, distance, opening_start, 
+	      opening_end,code_num)
+	    values (#{storeName,jdbcType=VARCHAR}, #{storeUrl,jdbcType=VARCHAR}, 
+	      #{storePhone,jdbcType=BIGINT}, #{storeAddress,jdbcType=VARCHAR}, #{reviewStar,jdbcType=INTEGER}, 
+	      #{salesVolume,jdbcType=INTEGER}, #{minimum,jdbcType=INTEGER}, #{deliveryCost,jdbcType=INTEGER}, 
+	      #{legalPerson,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{longitudex,jdbcType=VARCHAR}, 
+	      #{latitudey,jdbcType=VARCHAR}, #{distance,jdbcType=DOUBLE}, #{openingStart,jdbcType=TIMESTAMP}, 
+	      #{openingEnd,jdbcType=TIMESTAMP}, #{codeNum,jdbcType=INTEGER})
+	  </insert>
+	  
+	<!-- 删除菜品类型（写入状态0） -->
+    <update id="deleteStore" parameterType="java.lang.Integer">
+        update tb_store_info set code_num = 0 where store_id = #{storeId,jdbcType=INTEGER}
+    </update>
+</mapper>  

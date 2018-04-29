@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="user-scalable=no,width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+
+<title></title>
+<link rel="stylesheet" href="css/calendar.css">
+<link href="css/home.css" rel="stylesheet" type="text/css">
+<link href="http://at.alicdn.com/t/font_6yxmrwgmg7kl0udi.css"
+	rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="css/demo.css">
+
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/JQRadio.js"></script>
+<script src="js/jsRequestParam.js" type="text/javascript"></script>
+
+<script>
+	$(function() {
+		$("#radio01").JQRadio({});
+	});
+</script>
+
+</head>
+
+<body>
+	<div class="top_c">
+		<div style="width: 60%; float: left">
+			<a href="index.html" class="iconfont icon-jiantou-copy-copy"></a>
+			<p class="titi" style="float: right">提交信息</p>
+		</div>
+	</div>
+
+	<div class="person_info"
+		style="margin: 40px 0 0 0; float: left; width: 100%">
+
+		<div style="width: 78%; float: left">
+			<div style="float: left; margin-top: 20px;">
+				<span style="font-size: 16px; color: gray; margin-left: 1em">姓名</span>
+				<input type="text" placeholder="请输入姓名" class="waiterName"
+					style="-webkit-appearance: none; border: none; margin-left: 40px; font-size: 16px;">
+			</div>
+		</div>
+		<div class="radio_box" id="radio01" style="float: right; width: 22%;">
+			<!--隐藏表单 radioVal 的值即为选中项li的id值-->
+			<input type="hidden" value="" class="radioVal" name="" />
+			<ul>
+				<li id="r1" class="selected" value="0">先生</li>
+				<li id="r2" value="1">女士</li>
+			</ul>
+		</div>
+		<br> <br> <br> <br> <br>
+		<p style="border-bottom: 1px #E1E1E1 solid; width: 100%"></p>
+
+		<p class="write">
+			<span style="font-size: 16px; color: gray; margin-left: 1em">手机号</span>
+			<input type="text" placeholder="请输入手机号" class="waiterPhone"
+				style="-webkit-appearance: none; border: none; margin-left: 25px; font-size: 16px;">
+		</p>
+		<p style="border-bottom: 1px #E1E1E1 solid; width: 100%"></p>
+		<p class="write">
+			<span style="font-size: 16px; color: gray; margin-left: 1em">预产期</span>
+			<span onClick="showTime();" class="timeshow"
+				style="margin-left: 25px; font-size: 16px;">2017-08-12</span>
+		</p>
+		<p style="border-bottom: 1px #E1E1E1 solid; width: 100%"></p>
+		<p class="write">
+			<span style="font-size: 16px; color: gray; margin-left: 1em">备注</span>
+			<input type="text" placeholder="备注信息..." class="remark"
+				style="-webkit-appearance: none; border: none; margin-left: 40px; font-size: 16px;">
+		</p>
+		<p style="border-bottom: 1px #E1E1E1 solid; width: 100%"></p>
+	</div>
+	<div class="window changeTime" style="display: none">
+		<div id="calendar" class="calendar"></div>
+	</div>
+	<div
+		style="position: fixed; bottom: 0; width: 100%; text-align: center;"
+		onClick="serve_order_submit();">
+		<img src="images/cuirushi/button_submit.png" width="100%" />
+	</div>
+</body>
+</html>
+<script src="js/calendar.js" type="text/javascript"></script>
+<script type="text/javascript">
+  	function showTime(){
+		$('.changeTime').css('display','block');
+	}
+</script>
+<script type="text/javascript">
+		function check_li(a) {
+			if (a.childNodes[1].getAttribute("src", 2) == "cr_requirement_nochoose.png") {
+				a.childNodes[1].src = "cr_requirement_choose.png";
+				a.childNodes[0].checked = true;
+			} else {
+				a.childNodes[1].src = "cr_requirement_nochoose.png";
+				a.childNodes[0].checked = false;
+			}
+		}
+	</script>
+<script type="text/javascript">
+	function show(){		
+		var a = document.getElementsByClassName('selected')[0].innerText;
+		alert(a)
+	}
+	
+	function serve_order_submit(){
+		var dataObject = new  Object();
+		dataObject.waiterName = $.trim( $('.waiterName').val());
+		dataObject.waiterSex = $.trim($('.selected').val());
+		dataObject.waiterPhone = $.trim( $('.waiterPhone').val());
+		dataObject.waiterTime = document.getElementsByClassName('timeshow')[0].innerText ;
+		
+		var request=new UrlSearch(); //实例化
+		var waiterNo = request.waiterNo;
+		dataObject.waiterNo = waiterNo;
+		alert(JSON.stringify(dataObject));
+		$.ajax({
+			url : "../../serveInfo/insertServe",
+			data : {"dataObject":JSON.stringify(dataObject)},
+			type  : 'post',
+			async : true,
+			success : function(result) {
+				location.href='convenience.jsp'; 	
+			},
+		});
+	}
+	
+</script>
+

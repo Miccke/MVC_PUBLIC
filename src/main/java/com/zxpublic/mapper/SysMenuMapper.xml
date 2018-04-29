@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.SysMenuDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+<!-- 	<resultMap id="BaseResultMap" type="com.zxpublic.vo.SysMenu">
+		<result column="sid" property="sid" jdbcType="INTEGER" />
+		<result column="pid" property="pid" jdbcType="INTEGER" />
+		<result column="stitle" property="stitle"	jdbcType="CHAR" />
+		<result column="surl" property="surl" jdbcType="CHAR" />
+	</resultMap> -->
+	<!-- 查询单条记录 -->
+<!-- 	<select id="selectUserById" parameterType="int" resultMap="BaseResultMap">
+		SELECT * FROM t_user WHERE USER_ID = #{userId}
+	</select>
+	<select id="login" parameterType="com.zxpublic.vo.User"
+		resultMap="BaseResultMap">
+		select * from tb_user_t where login_name=#{loginName}
+	</select> -->
+
+	<select id='getMunuByUserId' resultType='com.zxpublic.vo.SysMenu'	parameterType="java.lang.String">
+		select m.sid,m.pid,m.stitle,m.surl 
+		from tb_menu_t m,tb_usermenu_t um
+		 where m.sid = um.mid and um.uid = #{uid,jdbcType=VARCHAR}
+	</select>
+
+</mapper>  

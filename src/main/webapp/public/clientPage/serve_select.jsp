@@ -1,0 +1,124 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+//	String waiterType = request.getParameter("waiterType").toString();
+	String waiterType = "3";
+	System.out.println(waiterType);
+	String typeName = "";
+	if(waiterType.equals("1")){
+		typeName = "月嫂";
+	}
+	if(waiterType.equals("2")){
+		typeName = "催乳师";
+	}
+	if(waiterType.equals("3")){
+		typeName = "陪护师";
+	}
+%>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"/>
+<title><%=typeName%>服务人员</title>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+<link href="css/home.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.11.3.min.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/province.js"></script>
+</head>
+
+<body>
+<div class="screen-rt">
+    <ul style="margin-left:0">
+        <li style="margin-left:-20px;">
+            <span>年龄</span>
+            <span>
+            <label class="lblSelect">
+                <select name="age" id="age" class="selectPointOfInterest"  onChange="ageChange();">
+                    <option value="0">不限</option>
+                    <option value="1" >1-30</option>              
+                    <option value="2" >30-35</option>
+                    <option value="3" >35-40</option>
+                    <option value="4" >40-45</option>
+                    <option value="5" >45-50</option>
+                    <option value="6" >其它</option>
+                </select>
+             </label>
+            </span>
+        </li>  
+        <li style="margin-left:20px;">
+            <span>星级</span>
+            <span>
+            <label class="lblSelect">
+                <select name="star" id="star" class="selectPointOfInterest"  onChange="satrChange();">
+                    <option value="0">不限</option>
+                    <option value="1" >一星月嫂</option>
+                    <option value="2" >二星月嫂</option>
+                    <option value="3" >三星月嫂</option>
+                    <option value="4" >四星月嫂</option>
+                    <option value="5" >五星月嫂</option>                         						
+                </select>
+             </label>
+            </span>
+        </li>                        			           				
+        <li style="margin-left:-20px">
+            <span>文化</span>
+            <span>
+            <label class="lblSelect">
+                <select name="culture" id="culture" class="selectPointOfInterest" onChange="cultureChange();">
+                    <option value="0">不限</option>
+                    <option value="1" >小学</option>
+                    <option value="2" >初中</option>
+                    <option value="3" >高中</option>
+                    <option value="4" >大专</option>
+                    <option value="5" >中专</option>
+                    <option value="6" >本科</option>                        						
+                </select>
+             </label>
+            </span>
+        </li>
+        <li style="margin-left:20px;">
+            <span>星座</span>
+            <span>
+            <label class="lblSelect">
+                <select name="zodiac" id="zodiac" class="selectPointOfInterest" onChange="zodiacChange();">
+                    <option value="0">不限</option>
+                    <option value="水瓶座" >水瓶座</option>
+                    <option value="双鱼座" >双鱼座</option>
+                    <option value="白羊座" >白羊座</option>
+                    <option value="金牛座" >金牛座</option>
+                    <option value="双子座" >双子座</option>
+                    <option value="巨蟹座" >巨蟹座</option>
+                    <option value="狮子座" >狮子座</option>
+                    <option value="处女座" >处女座</option>
+                    <option value="天枰座" >天枰座</option>
+                    <option value="天蝎座" >天蝎座</option>
+                    <option value="射手座" >射手座</option>
+                    <option value="魔蝎座" >魔蝎座</option>
+                </select>
+             </label>
+            </span>
+        </li>       
+        <li style="margin-left:-20px">
+        	<span>省级</span>
+            <span>
+                <label class="lblSelect"> 
+                    <select id="sheng" style="width: 100px;" class="selectPointOfInterest"></select>
+                </label>
+            </span>
+        </li>
+        <li style="margin-left:20px">
+       	 	<span>市级</span>
+            <span>
+                <label class="lblSelect"> 
+                   <select id="shi" style="width: 100px;" class="selectPointOfInterest"></select> 
+                </label>
+            </span>
+        </li>
+    </ul>
+</div>
+<div class="showServelist">
+</div>
+</body>
+</html>

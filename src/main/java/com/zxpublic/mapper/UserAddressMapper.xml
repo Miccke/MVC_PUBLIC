@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.UserAddressDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.zxpublic.vo.UserAddress">
+		<id column="add_id" property="addId" jdbcType="BIGINT" />
+	    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+	    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+	    <result column="user_phone" property="userPhone" jdbcType="BIGINT" />
+	    <result column="user_address" property="userAddress" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 查用户地址 默认-->	
+	<select id="getUserAddress" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.UserAddress">
+		select * from tb_user_address where open_id = #{openId,jdbcType=VARCHAR} 
+			<if test="addId != null">
+			    and add_id = #{addId,jdbcType=BIGINT} 
+			</if>
+		limit 1
+	</select>
+	<!-- 新增用户地址 -->
+	<insert id="insert" parameterType="com.zxpublic.vo.UserAddress" useGeneratedKeys="true" keyProperty="addId">
+		insert into tb_user_address (open_id, user_name, user_phone, user_address)
+   		 values (#{openId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},#{userPhone,jdbcType=BIGINT}, #{userAddress,jdbcType=VARCHAR})
+	</insert>
+	<!-- 查用户所有的地址-->	
+	<select id="listAll" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from tb_user_address where open_id = #{openId,jdbcType=VARCHAR}
+	</select>	
+	<!-- 更新用户地址 -->
+	<update id="update" parameterType="com.zxpublic.vo.UserAddress">
+	    update tb_user_address 
+		    <set>
+		      <if test="openId != null" >
+		        open_id = #{openId,jdbcType=VARCHAR},
+		      </if>
+		      <if test="userName != null" >
+		        user_name = #{userName,jdbcType=VARCHAR},
+		      </if>
+		      <if test="userPhone != null" >
+		        user_phone = #{userPhone,jdbcType=BIGINT},
+		      </if>
+		      <if test="userAddress != null" >
+		        user_address = #{userAddress,jdbcType=VARCHAR},
+		      </if>
+		    </set>
+	    where add_id = #{addId,jdbcType=BIGINT}
+	</update>
+</mapper>  

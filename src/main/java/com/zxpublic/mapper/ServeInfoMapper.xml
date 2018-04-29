@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.ServeInfoDao">
+	 <resultMap id="BaseResultMap" type="com.zxpublic.vo.ServeInfo" >
+	    <id column="serve_id" property="serveId" jdbcType="INTEGER" />
+	    <result column="serveType" property="servetype" jdbcType="INTEGER" />
+	    <result column="personalNeed" property="personalneed" jdbcType="VARCHAR" />
+	    <result column="escortPerson" property="escortperson" jdbcType="VARCHAR" />
+	    <result column="lactationDemand" property="lactationdemand" jdbcType="VARCHAR" />
+	    <result column="selfCare" property="selfcare" jdbcType="VARCHAR" />
+	    <result column="ageBracket" property="agebracket" jdbcType="VARCHAR" />
+	    <result column="dutyTime" property="dutytime" jdbcType="TIMESTAMP" />
+	    <result column="dueDate" property="duedate" jdbcType="TIMESTAMP" />
+	    <result column="userName" property="username" jdbcType="VARCHAR" />
+	    <result column="phoneNum" property="phonenum" jdbcType="VARCHAR" />
+	    <result column="subTime" property="subtime" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="serveState" property="servestate" jdbcType="INTEGER" />
+	    <result column="IntervalNumber" property="IntervalNumber" jdbcType="INTEGER"/>
+	    <result column="allNumber" property="allNumber" jdbcType="INTEGER"/>
+	    <result column="openId" jdbcType="VARCHAR" property="openid" />  
+	  </resultMap>
+	
+	
+	<!-- 修改 -->
+	<insert id="insertServe" parameterType="com.zxpublic.vo.ServeInfo" useGeneratedKeys="true" keyProperty="serveId">
+		insert into tb_serve_info (serveType, personalNeed, 
+	      escortPerson, lactationDemand, selfCare, 
+	      ageBracket, dutyTime, dueDate, 
+	      userName, phoneNum, subTime, 
+	      remark, openId)
+	    values (#{servetype,jdbcType=INTEGER}, #{personalneed,jdbcType=VARCHAR}, 
+	      #{escortperson,jdbcType=VARCHAR}, #{lactationdemand,jdbcType=VARCHAR}, #{selfcare,jdbcType=VARCHAR}, 
+	      #{agebracket,jdbcType=VARCHAR}, #{dutytime,jdbcType=TIMESTAMP}, #{duedate,jdbcType=TIMESTAMP}, 
+	      #{username,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR}, #{subtime,jdbcType=TIMESTAMP}, 
+	      #{remark,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 修改 -->
+	<select id="selectByState" resultMap="BaseResultMap" parameterType="java.lang.String">
+	    select * from tb_serve_info  where serveState = 3 and openId = #{openid,jdbcType=VARCHAR} 
+	</select>
+	<!--查询操作记录-->
+    <select id="queryOrderList" parameterType="com.zxpublic.vo.ServeInfo"  resultMap="BaseResultMap">
+       select * from tb_serve_info
+         where 1 = 1
+         <if test=" null != servetype and '' != servetype">
+             AND servetype = #{servetype} 
+        </if>
+         <if test=" null != username and '' != username">
+             AND userName like concat('%',#{username},'%')
+        </if>
+         <if test=" null != servestate and '' != servestate">
+             AND serveState = #{servestate} 
+        </if>
+         order by dueDate desc
+          limit #{startIndex},#{pageSize}
+        <!--startIndex开始页 ， pageSize每页显示的记录条数-->
+    </select>
+
+    <!--查询总记录条数-->
+    <select id="queryOrderCount" resultType="int" parameterType="com.zxpublic.vo.ServeInfo">
+       select count(1) from tb_serve_info
+        where 1=1
+        <if test=" null != servetype and '' != servetype">
+             AND servetype = #{servetype} 
+        </if>
+         <if test=" null != username and '' != username">
+             AND userName like concat('%',#{username},'%')
+        </if>
+         <if test=" null != servestate and '' != servestate">
+             AND serveState = #{servestate} 
+        </if>
+	         <!-- <if test=" null != content and '' != content">
+	             AND d.dish_name like concat('%',#{content},'%') 
+	        </if> -->
+    </select>
+    
+    <!-- 更新服务订单状态 -->
+    <update id="updateServe" parameterType="com.zxpublic.vo.ServeInfo">
+        update tb_serve_info set serveState = #{servestate} where serve_id = #{serveId}
+    </update>
+    
+    <select id="getIntervalNum" parameterType="com.zxpublic.vo.ServeInfo" resultMap="BaseResultMap">
+        SELECT
+			t.serveType,COUNT(t.serveType) as IntervalNumber
+		FROM
+			tb_serve_info t
+		WHERE 1=1
+		AND date_format(t.dueDate,'%Y-%m-%d') BETWEEN str_to_date(#{startTime}, '%Y-%m-%d')
+		AND str_to_date(#{endTime}, '%Y-%m-%d')
+		group by t.serveType
+		
+    </select>
+    
+    <select id="getAllOrderNum" parameterType="com.zxpublic.vo.ServeInfo" resultMap="BaseResultMap">
+         SELECT
+			t.serveType,COUNT(t.serveType) as allNumber
+		FROM
+			tb_serve_info t
+		group by t.serveType
+    </select>
+    <!-- 获取异常订单的区间数量和总数量 -->
+    <select id="getAbnormalOrderNum" parameterType="com.zxpublic.vo.ServeInfo" resultMap="BaseResultMap">
+        SELECT
+			count(1) as IntervalNumber ,(select count(1) from tb_serve_info s where s.serveState = 4) as allNumber
+			from tb_serve_info t
+		where serveState = 4
+		  AND date_format(t.dueDate,'%Y-%m-%d') BETWEEN str_to_date(#{startTime}, '%Y-%m-%d') AND str_to_date(#{endTime}, '%Y-%m-%d')
+    </select>
+    
+    <select id="getDayNum" parameterType="com.zxpublic.vo.ServeInfo" resultType="int">
+        select count(1) from tb_serve_info t where date_format(t.dueDate,'%y-%m-%d') = str_to_date(#{dateStr}, '%Y-%m-%d')
+    </select>
+    
+	<!-- 修改 -->
+	<select id="selectByStateNoEnd" resultMap="BaseResultMap" parameterType="java.lang.String">
+	    select * from tb_serve_info  where (serveState = 0 or serveState = 1 or serveState = 2 or serveState = 4)  and openId = #{openid,jdbcType=VARCHAR} 
+	</select>
+</mapper>  

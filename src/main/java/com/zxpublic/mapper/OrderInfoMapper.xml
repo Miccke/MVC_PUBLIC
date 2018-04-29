@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.OrderInfoDao">
+	<resultMap id="BaseResultMap" type="com.zxpublic.vo.OrderInfo" >
+	    <id column="order_Id" jdbcType="INTEGER" property="orderId"  />
+	    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+	    <result column="content" jdbcType="VARCHAR" property="content"  />
+	    <result column="realName" jdbcType="VARCHAR" property="realname"  />
+	    <result column="phoneNum" jdbcType="DECIMAL" property="phonenum"  />
+	    <result column="orderTime" jdbcType="TIMESTAMP" property="ordertime"  />
+	    <result column="sendTime" jdbcType="TIMESTAMP" property="sendtime" />
+	    <result column="store_Id" jdbcType="INTEGER" property="storeId"  />
+	    <result column="store_name" jdbcType="VARCHAR"  property="storeName" />
+	    <result column="delivery_cost" jdbcType="INTEGER"  property="deliveryCost" />
+	    <result column="amount" jdbcType="REAL" property="amount"  />
+	    <result column="orderSTate" jdbcType="INTEGER" property="orderstate"/>
+	    <result column="address" jdbcType="VARCHAR" property="address"  />
+	    <result column="num"  jdbcType="VARCHAR" property="num"/>
+	    <result column="finishTime" property="finishtime" jdbcType="TIMESTAMP"/>
+	    <result column="IntervalNumber" property="IntervalNumber" jdbcType="INTEGER"/>
+	    <result column="allNumber" property="allNumber" jdbcType="INTEGER"/>
+	    <result column="order_score" property="orderScore" jdbcType="INTEGER"/>
+	    <result column="openId" jdbcType="VARCHAR" property="openid" />
+
+	  </resultMap>
+	<select id="listAll" resultType="com.zxpublic.vo.OrderInfo">
+		select * from tb_store_info
+	</select>
+	<insert id="insertOrder" parameterType="com.zxpublic.vo.OrderInfo" useGeneratedKeys="true" keyProperty="orderId">
+	    insert into tb_order_info (order_num, content, 
+	      realName, phoneNum, orderTime, 
+	      sendTime, store_Id, store_name, 
+	      amount, orderSTate, address, 
+	      num, finishTime,openId)
+	    values (#{orderNum,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+	      #{realname,jdbcType=VARCHAR}, #{phonenum,jdbcType=DECIMAL}, #{ordertime,jdbcType=TIMESTAMP}, 
+	      #{sendtime,jdbcType=TIMESTAMP}, #{storeId,jdbcType=INTEGER}, #{storeName,jdbcType=VARCHAR}, 
+	      #{amount,jdbcType=REAL}, #{orderstate,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
+	      #{num,jdbcType=VARCHAR}, #{finishtime,jdbcType=TIMESTAMP}, #{openid,jdbcType=VARCHAR})
+
+	</insert>
+	<!-- 分页查询订单数据 -->
+	<select id="selectByState" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.OrderInfo" >
+	    SELECT order_id,order_num, group_concat(content) AS content,realName,phoneNum,orderTime,sendTime,store_Id,store_name,SUM(amount) as amount,orderSTate,address,group_concat(num) AS num,order_score
+		FROM tb_order_info    
+		where (orderSTate = 0 or orderSTate = 1 or orderSTate = 2) and openId = #{openid,jdbcType=VARCHAR}
+		group by order_num ORDER BY order_Id desc
+        <if test="pageSize != null">
+	        limit #{startIndex},#{pageSize}
+        </if>
+	 </select>
+	
+	 <select id="selectByOrderNum" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    SELECT * FROM tb_order_info where order_num = #{orderNum,jdbcType=VARCHAR}
+	  </select>
+	  <!--  -->
+	  <update id="updateByOrderNum" parameterType="com.zxpublic.vo.OrderInfo" >
+	    update tb_order_info
+	    <set>
+	      <if test="content != null">
+	        content = #{content,jdbcType=VARCHAR},
+	      </if>
+	      <if test="realname != null">
+	        realName = #{realname,jdbcType=VARCHAR},
+	      </if>
+	      <if test="phonenum != null">
+	        phoneNum = #{phonenum,jdbcType=DECIMAL},
+	      </if>
+	      <if test="ordertime != null">
+	        orderTime = #{ordertime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="sendtime != null">
+	        sendTime = #{sendtime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="storeId != null">
+	        store_Id = #{storeId,jdbcType=INTEGER},
+	      </if>
+	      <if test="storeName != null">
+	        store_name = #{storeName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="amount != null">
+	        amount = #{amount,jdbcType=REAL},
+	      </if>
+	      <if test="orderstate != null">
+	        orderSTate = #{orderstate,jdbcType=INTEGER},
+	      </if>
+	      <if test="address != null">
+	        address = #{address,jdbcType=VARCHAR},
+	      </if>
+	      <if test="num != null">
+	        num = #{num,jdbcType=VARCHAR},
+	      </if>
+	      <if test="finishtime != null">
+	        finishTime = #{finishtime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="orderScore != null">
+	        order_score = #{orderScore,jdbcType=DECIMAL},
+	      </if>
+	      <if test="openid != null">
+	        openId = #{openid,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where order_num = #{orderNum,jdbcType=VARCHAR}
+	  </update>
+	  
+	  <select id="selectByStateAndSendTime" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.OrderInfo" >
+	    SELECT order_id,order_num, group_concat(content) AS content,realName,phoneNum,orderTime,sendTime,store_Id,store_name,SUM(amount) as amount,orderSTate,address,group_concat(num) AS num
+		FROM tb_order_info
+		where orderSTate = 2 and sendTime is not null
+		GROUP BY order_num DESC
+	  </select>
+    <select id="queryOrderList" parameterType="com.zxpublic.vo.OrderInfo"  resultMap="BaseResultMap">
+       select d.dish_name as content,o.order_Id,o.order_num,o.realName,s.delivery_cost,o.finishTime,o.order_score,
+		o.phoneNum,o.orderTime,o.store_Id,s.store_name,
+		o.amount,o.orderSTate,o.address,o.num 
+		from tb_order_info o,tb_store_info s ,tb_dish_info d
+		where s.store_Id = o.store_id
+            and o.content = d.dish_id
+         <if test=" null != storeId and '' != storeId">
+            AND s.uid = #{storeId}
+        </if>
+         <if test=" null != orderstate and '' != orderstate or 0 == orderstate">
+            AND o.orderSTate = #{orderstate}
+        </if>
+         <if test=" null != content and '' != content">
+            AND d.dish_name like concat('%',#{content},'%') 
+        </if>
+        order by orderTime desc
+	        limit #{startIndex},#{pageSize}
+        <!--startIndex开始页 ， pageSize每页显示的记录条数-->
+    </select>
+	<select id="selectByState3" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    SELECT order_id,order_num, group_concat(content) AS content,realName,phoneNum,orderTime,sendTime,store_Id,store_name,SUM(amount) as amount,orderSTate,address,group_concat(num) AS num,order_score
+		FROM tb_order_info    
+		where orderSTate = 3
+		 and openId = #{openid,jdbcType=VARCHAR}
+		GROUP BY order_num DESC
+	</select>
+    <!--查询总记录条数-->
+    <select id="queryOrderListCount" resultType="int" parameterType="com.zxpublic.vo.OrderInfo">
+       select count(1) from tb_order_info o,tb_store_info s ,tb_dish_info d
+		where s.store_Id = o.store_id
+            and o.content = d.dish_id
+	        <if test=" null != storeId and '' != storeId">
+	            AND s.uid = #{storeId}
+	        </if>
+	         <if test=" null != orderstate and '' != orderstate or 0 == orderstate">
+	            AND o.orderSTate = #{orderstate}
+	        </if>
+	         <if test=" null != content and '' != content">
+	             AND d.dish_name like concat('%',#{content},'%') 
+	        </if>
+    </select>
+    <!-- 更新订单 -->
+    <update id="updateOrder" parameterType="com.zxpublic.vo.OrderInfo">
+        update tb_order_info t set t.orderSTate = #{orderstate}
+        <if test="null != orderstate and '' != orderstate and 2==orderstate">
+            ,t.sendTime = #{sendtime}
+        </if>
+        where t.order_num = #{orderNum}
+    </update>
+    <select id="selectByState2" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.OrderInfo" >
+	    SELECT order_id,order_num, group_concat(content) AS content,realName,phoneNum,orderTime,store_Id,store_name,SUM(amount) as amount,orderSTate,address,group_concat(num) AS num
+		FROM tb_order_info    
+		order BY order_num DESC
+	 </select>
+	 <select id="getOrder" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.OrderInfo">
+	     select * from tb_order_info t where t.order_id = #{orderId}
+	 </select>
+	 
+	<!-- 获取异常订单的区间数量和总数量 -->
+    <select id="getAllOrderNum" parameterType="com.zxpublic.vo.OrderInfo" resultMap="BaseResultMap">
+        SELECT
+			count(1) as IntervalNumber ,(select count(1) 
+										from tb_order_info s 
+										where 1=1
+										<if test=" null != storeId and '' != storeId">
+								            and s.store_Id = #{storeId}
+								        </if>
+										) as allNumber
+			from tb_order_info t
+		where 1=1 and date_format(t.orderTime,'%Y-%m-%d')  BETWEEN str_to_date(#{startTimes}, '%Y-%m-%d') AND str_to_date(#{endTimes}, '%Y-%m-%d')
+			<if test=" null != storeId and '' != storeId">
+	            and t.store_Id = #{storeId}
+	        </if>
+    </select>
+	<!-- 获取异常订单的区间数量和总数量 -->
+    <select id="getAbnormalOrderNum" parameterType="com.zxpublic.vo.OrderInfo" resultMap="BaseResultMap">
+        SELECT
+			count(1) as IntervalNumber ,(select count(1) 
+											from tb_order_info s 
+											where s.orderSTate = 4
+										  <if test=" null != storeId and '' != storeId">
+									            and s.store_Id = #{storeId}
+									        </if>
+											) as allNumber
+			from tb_order_info t
+		where orderSTate = 4
+		  AND date_format(t.orderTime,'%Y-%m-%d') BETWEEN str_to_date(#{startTimes}, '%Y-%m-%d') AND str_to_date(#{endTimes}, '%Y-%m-%d')
+		  <if test=" null != storeId and '' != storeId">
+	            and t.store_Id = #{storeId}
+	        </if>
+    </select>
+    
+    <select id="getDayNum" parameterType="com.zxpublic.vo.OrderInfo" resultType="int">
+        select count(1) from tb_order_info t where 
+        date_format(t.orderTime,'%y-%m-%d') = str_to_date(#{storeName}, '%Y-%m-%d')
+        <if test=" null != storeId and '' != storeId">
+            and t.store_Id = #{storeId}
+        </if>
+      <!-- <if test="storeId != null">
+        store_Id = #{storeId,jdbcType=INTEGER},
+      </if> -->
+    </select>
+     <!-- 查当前最大订单号 -->
+    <select id="selectMaxNum" resultType="String">
+        SELECT order_num FROM	(SELECT	*	FROM tb_order_info ORDER BY	order_num DESC) tb_order_info GROUP BY order_Id ORDER BY order_num DESC LIMIT 1
+    </select>
+</mapper>  

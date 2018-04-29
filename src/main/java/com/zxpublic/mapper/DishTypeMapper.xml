@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.DishTypeDao">
+	<resultMap id="BaseResultMap" type="com.zxpublic.vo.DishType" >
+	    <id column="dishType_id" property="dishtypeId" jdbcType="INTEGER" />
+	    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+	    <result column="dishType" property="dishtype" jdbcType="VARCHAR" />
+	    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+   	    <result column="code_num" property="codeNum" jdbcType="INTEGER" /> 
+  	</resultMap>
+	<select id="selectByStoreId" resultMap="BaseResultMap">
+		select dishType_id,dishType,store_id from tb_dish_type where  1=1 
+	       and  store_id = #{storeId,jdbcType=INTEGER} and code_num = 1
+	</select>
+	
+	<select id="getAll" resultMap="BaseResultMap">
+		select td.dishType_id,td.store_id,td.dishType,ts.store_name from tb_dish_type td,tb_store_info ts where td.store_id = ts.store_id and td.code_num = 1 order by store_id asc
+	</select>
+	<!-- 分页获取菜品类型 -->
+	<select id="getAllByPage" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.DishType">
+		select td.dishType_id,td.store_id,td.dishType,ts.store_name from tb_dish_type td,tb_store_info ts where td.store_id = ts.store_id and td.code_num = 1 order by store_id asc limit #{startIndex},#{pageSize}
+	</select>
+	<!-- 获取菜品类型总数 -->
+	<select id="countDishType" resultType="int">
+	    select count(1) from tb_dish_type where code_num = 1
+	</select>
+	<!-- 新增菜品种类 -->
+	<insert id="insertDishType" parameterType="com.zxpublic.vo.DishType"  useGeneratedKeys="true" keyProperty="dishtypeId">
+	    insert into tb_dish_type (dishType_id, dishType, store_id,code_num)
+    	values (#{dishtypeId,jdbcType=INTEGER}, #{dishtype,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, #{codeNum,jdbcType=INTEGER})
+	</insert>
+
+	<!-- 删除菜品类型（写入状态0） -->
+    <update id="deleteDishType" parameterType="java.lang.Integer">
+        update tb_dish_type set code_num = 0 where dishType_id = #{dishtypeId,jdbcType=INTEGER}
+    </update>
+</mapper>  

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<!-- 控制台日志输出 -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss}[%p] %c{1}.%M(%L): %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="FATAL" />
+			<param name="LevelMin" value="INFO" />
+		</filter>
+	</appender>
+	<!-- 应用服务器日志输出 -->
+	<appender name="APPLOGFILEDAILY" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="encoding" value="UTF-8" />
+		<param name="File" value="../logs/ewmvc.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'"></param>
+		<param name="Append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS}[%p] %c{1}: %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="FATAL" />
+			<param name="LevelMin" value="INFO" />
+		</filter>
+	</appender>
+	<!-- 应用服务器日志输出 -->
+	<appender name="APPLOGFILE" class="org.apache.log4j.RollingFileAppender">
+		<param name="encoding" value="UTF-8" />
+		<param name="File" value="../logs/ewmvc.log" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="30720KB" />
+		<param name="MaxBackupIndex" value="99" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS}[%p] %c{1}: %m%n" />
+		</layout>
+	</appender>
+	<!-- 性能测试日志输出 -->
+	<appender name="CAPLOGFILE" class="org.apache.log4j.RollingFileAppender">
+		<param name="encoding" value="UTF-8" />
+		<param name="File" value="../logs/mvcperf.log" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="30720KB" />
+		<param name="MaxBackupIndex" value="2" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS}[%p] %c{1}: %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="ewmvc.cap">
+		<level value="DEBUG" />
+		<appender-ref ref="CAPLOGFILE" />
+	</logger>
+
+	<logger name="com.zxpublic.base.security.ResourceSecurityInterceptor">
+		<level value="INFO" />
+	</logger>
+
+	<logger name="com.zxpublic.base.spring.OpenHibernateSessionInViewFilter">
+		<level value="INFO" />
+	</logger>
+
+	<logger name="com.zxpublic.base.security.RtxAuthenticationFilter">
+		<level value="INFO" />
+	</logger>
+
+	<logger name="com.zxpublic">
+		<level value="DEBUG" />
+	</logger>
+
+	<logger name="org.jooq">
+		<level value="DEBUG" />
+	</logger>
+
+	<logger name="net.sf.ehcache">
+		<level value="ERROR" />
+	</logger>
+
+	<logger name="org.apache">
+		<level value="WARN" />
+	</logger>
+
+	<logger name="org.apache.velocity.runtime.log">
+		<level value="WARN" />
+	</logger>
+
+	<logger name="org.hibernate">
+		<level value="WARN" />
+	</logger>
+
+	<logger
+		name=" org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<level value="WARN" />
+	</logger>
+
+	<logger name="org.springframework.security">
+		<level value="WARN" />
+	</logger>
+
+	<logger name="org.springframework">
+		<level value="WARN" />
+	</logger>
+
+	<logger name="org.apache.struts2">
+		<level value="FATAL" />
+	</logger>
+
+	<logger name="com.opensymphony.xwork2">
+		<level value="FATAL" />
+	</logger>
+
+	<logger name="org.springframework.ui.velocity">
+		<level value="WARN" />
+	</logger>
+
+	<logger name="org.apache.catalina">
+		<level value="WARN" />
+	</logger>
+
+	<root>
+		<level value="WARN" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="APPLOGFILEDAILY" />
+	</root>
+
+</log4j:configuration>

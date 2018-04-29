@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxpublic.dao.DishInfoDao">
+	<resultMap id="BaseResultMap" type="com.zxpublic.vo.DishInfo" >
+		<id column="dish_id" property="dishId" jdbcType="INTEGER" />
+	    <result column="dishType_id" property="dishtypeId" jdbcType="INTEGER" />
+	    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+	    <result column="dish_name" property="dishName" jdbcType="VARCHAR" />
+	    <result column="dish_specification" property="dishSpecification" jdbcType="VARCHAR" />
+	    <result column="dish_monthSales" property="dishMonthsales" jdbcType="INTEGER" />
+	    <result column="dish_price" property="dishPrice" jdbcType="REAL" />
+	    <result column="dish_star" jdbcType="INTEGER" property="dishStar" />
+	    <result column="dish_url" property="dishUrl" jdbcType="VARCHAR" />
+	    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+	    <result column="dishType" property="dishtype" jdbcType="VARCHAR" />
+	    <result column="code_num" property="codeNum" jdbcType="INTEGER" /> 
+	</resultMap>
+	<select id="selectByStoreId" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.DishInfo">
+		select * from tb_dish_info where store_id = #{0} and dishType_id = #{1} and code_num = 1
+	</select>
+		
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	   select * from tb_dish_info where dish_id = #{dishId,jdbcType=INTEGER} and code_num = 1
+	</select>
+	
+	<!--查询总菜品数量-->
+    <select id="countDish" resultType="int" parameterType="com.zxpublic.vo.DishInfo">
+      select count(1) from tb_dish_info td,tb_dish_type dt,tb_store_info ts  where td.dishType_id =  dt.dishType_id and td.store_id = ts.store_id  and td.code_num = 1
+      		<if test="dishName != null">
+       		    and dish_name  like concat('%',#{dishName},'%') 
+       		</if>
+       		<if test="storeName != null">
+       		    and store_name  like concat('%',#{storeName},'%') 
+       		</if>
+    </select>
+    
+    <!-- 菜品list分页 -->
+    <select id="getAll" resultMap="BaseResultMap" parameterType="com.zxpublic.vo.DishInfo">
+       select 
+     		td.dish_id,td.dishType_id, td.store_id, td.dish_name, td.dish_specification,td.dish_price, td.dish_star, td.dish_url,ts.store_name, dt.dishType,(select count(1) from tb_order_info toi where DATE_FORMAT(now(),'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m') and toi.content = td.dish_id) as dish_monthSales
+       from 
+       		tb_dish_info td,tb_dish_type dt,tb_store_info ts  
+       where 
+       		td.dishType_id =  dt.dishType_id and td.store_id = ts.store_id and td.code_num = 1
+       		<if test="dishName != null">
+       		    and dish_name  like concat('%',#{dishName},'%') 
+       		</if>
+       		<if test="storeName != null">
+       		    and store_name  like concat('%',#{storeName},'%') 
+       		</if>
+       order by td.store_id asc 
+       limit #{startIndex},#{pageSize}
+    </select>
+    
+    <!-- 新增菜品 -->
+    <insert id="insertDish" parameterType="com.zxpublic.vo.DishInfo" useGeneratedKeys="true" keyProperty="dishId">
+         insert into tb_dish_info (dishType_id, store_id, 
+	      dish_name, dish_specification, dish_monthSales, 
+	      dish_price, dish_star, dish_url,code_num
+	      )
+	    values (#{dishtypeId,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, 
+	      #{dishName,jdbcType=VARCHAR}, #{dishSpecification,jdbcType=VARCHAR}, #{dishMonthsales,jdbcType=INTEGER}, 
+	      #{dishPrice,jdbcType=DOUBLE}, #{dishStar,jdbcType=INTEGER}, #{dishUrl,jdbcType=INTEGER}, #{codeNum,jdbcType=INTEGER}
+	      )
+    </insert>
+    <!-- 删除菜品（写入状态0） -->
+    <update id="deleteDish" parameterType="java.lang.Integer">
+        update tb_dish_info set code_num = 0 where dish_id = #{dishId,jdbcType=INTEGER}
+    </update>
+</mapper>

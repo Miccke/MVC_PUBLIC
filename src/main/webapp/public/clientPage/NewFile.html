@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+
+<title>Welcome ZT starting page</title>
+<meta charset="utf-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="This is my page">
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="css/home.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+	function test(){
+		$('.window').css('display','block');
+	}
+</script>
+</head>
+<body>
+	<button onClick="test();">测试</button>
+	<div class="window">
+		<div style="width:240px;height:190px;margin-top:50%;margin-left:25%; background:url(images/pingfen/history_order_prompt_bg.png); background-size:100% 100%" >
+			<p style="padding-top:100px;padding-left:55px;" >
+					<img src="images/pingfen/score_star_grey_big.png" width="25px" height="25px" id="1" class="imgP"/>
+					<img src="images/pingfen/score_star_grey_big.png" width="25px" height="25px" id="2" class="imgP"/>
+					<img src="images/pingfen/score_star_grey_big.png" width="25px" height="25px" id="3" class="imgP"/>
+					<img src="images/pingfen/score_star_grey_big.png" width="25px" height="25px" id="4" class="imgP"/>
+					<img src="images/pingfen/score_star_grey_big.png" width="25px" height="25px" id="5" class="imgP"/> 
+			</p>
+			<p style="padding-top:23px; font-size:18px; padding-left:50px;" > 
+				<span class="exitPing">取消</span>
+				<span class="submitPing" style="margin-left:65px;">确定</span>
+			</p>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+	function pingjia(){
+		$('.window').css('display','block');
+		}
+	$('.window').click(function(){
+		$('.window').css('display','block');
+		$('.gou').css('display','block');
+	})
+		
+	function rate(obj,oEvent){ 
+
+		var imgSrc = 'images/pingfen/score_star_grey_big.png'; 
+		var imgSrc_2 = 'images/pingfen/score_star_yellow_big.png'; 
+		//--------------------------------------------------------------------------- 
+		document.getElementsById('1')[0].addEventListener("click", click);
+		function click(){
+			alert(1)
+		}
+		
+		
+		if(obj.rateFlag) return; 
+		var e = oEvent || window.event; 
+		var target = e.target || e.srcElement;  
+		var imgArray = obj.getElementsByTagName("img"); 
+		for(var i=0;i<imgArray.length;i++){ 
+		   imgArray[i]._num = i; 
+		   imgArray[i].onclick=function(){ 
+		    if(obj.rateFlag) return; 
+		    obj.rateFlag=true; 
+		    alert(this._num+1); 
+		   }; 
+		} 
+		if(target.tagName=="IMG"){ 
+		   for(var j=0;j<imgArray.length;j++){ 
+		    if(j<=target._num){ 
+		     imgArray[j].src=imgSrc_2; 
+		    } else { 
+		     imgArray[j].src=imgSrc; 
+		    } 
+		   } 
+		} else { 
+		   for(var k=0;k<imgArray.length;k++){ 
+		    imgArray[k].src=imgSrc; 
+		   } 
+		} 
+	} 
+</script>

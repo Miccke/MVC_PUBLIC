@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zxpublic.dao.SWaiterOrderInfoDao" >
+  <resultMap id="BaseResultMap" type="com.zxpublic.vo.SWaiterOrderInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="waiter_type" property="waiterType" jdbcType="INTEGER" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_sex" property="userSex" jdbcType="INTEGER" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="waiterNo" jdbcType="VARCHAR" property="waiterno" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+    <result column="serve_state" property="serveState" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="IntervalNumber" property="IntervalNumber" jdbcType="INTEGER"/>
+    <result column="allNumber" property="allNumber" jdbcType="INTEGER"/>
+    <result column="duty_time" jdbcType="TIMESTAMP" property="dutyTime" />
+  	<!--  配置关联属性 -->
+	<collection property="sWaiterMessage" ofType="com.zxpublic.vo.SWaiterMessage">
+		<id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="waiter_no" jdbcType="VARCHAR" property="waiterNo" />
+	    <result column="waiter_type" jdbcType="INTEGER" property="waiterType" />
+	    <result column="waiter_name" jdbcType="VARCHAR" property="waiterName" />
+	    <result column="waiter_imageurl" jdbcType="VARCHAR" property="waiterImageurl" />
+	    <result column="waiter_idcard" jdbcType="VARCHAR" property="waiterIdcard" />
+	    <result column="waiter_price" jdbcType="BIGINT" property="waiterPrice" />
+	    <result column="waiter_age" jdbcType="INTEGER" property="waiterAge" />
+	    <result column="waiter_province" jdbcType="VARCHAR" property="waiterProvince" />
+	    <result column="waiter_city" jdbcType="VARCHAR" property="waiterCity" />
+	    <result column="waiter_babycount" jdbcType="INTEGER" property="waiterBabycount" />
+	    <result column="waiter_characteristics" jdbcType="VARCHAR" property="waiterCharacteristics" />
+	    <result column="waiter_platform_msg" jdbcType="VARCHAR" property="waiterPlatformMsg" />
+	    <result column="waiter_experience" jdbcType="VARCHAR" property="waiterExperience" />
+	    <result column="waiter_constellation" jdbcType="VARCHAR" property="waiterConstellation" />
+	    <result column="waiter_starlevel" jdbcType="INTEGER" property="waiterStarlevel" />
+	    <result column="waiter_education" jdbcType="INTEGER" property="waiterEducation" />
+	    <result column="remark" jdbcType="VARCHAR" property="remark" />
+	    <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+	    <result column="attachId" property="attachId" jdbcType="VARCHAR" />
+	    <result column="job_title" property="jobTitle" jdbcType="VARCHAR" />
+	</collection>    
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.zxpublic.vo.SWaiterOrderInfo"  useGeneratedKeys="true" keyProperty="id">
+    insert into tb_waiter_order_info (waiter_type, order_num, user_name, 
+      user_sex, user_phone, openid, waiterNo,
+      start_time, finish_time, serve_state, remark, duty_time)
+    values (#{waiterType,jdbcType=INTEGER}, #{orderNum,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userSex,jdbcType=INTEGER}, #{userPhone,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{waiterno,jdbcType=VARCHAR},
+      #{startTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, #{serveState,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{dutyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <select id="selectByState" resultMap="BaseResultMap" parameterType="java.lang.String">
+	    select two.*,tw.* from tb_waiter_order_info two,tb_waiter_message_t tw where serve_state = 3 and openid = #{openid,jdbcType=VARCHAR} and two.waiterNo = tw.waiter_no
+  </select>
+  
+  <select id="selectByStateNoEnd" resultMap="BaseResultMap" parameterType="java.lang.String">
+	    select * from tb_waiter_order_info  where (serve_state = 0 or serve_state = 1 or serve_state = 2 or serve_state = 4)  and openid = #{openid,jdbcType=VARCHAR} order by duty_time desc 
+  </select>
+  <select id="getIntervalNum" parameterType="com.zxpublic.vo.SWaiterOrderInfo" resultMap="BaseResultMap">
+        SELECT
+			t.waiter_type,COUNT(t.waiter_type) as IntervalNumber
+		FROM
+			tb_waiter_order_info t
+		WHERE 1=1
+		AND date_format(t.start_time,'%Y-%m-%d') BETWEEN str_to_date(#{sTime}, '%Y-%m-%d')
+		AND str_to_date(#{eTime}, '%Y-%m-%d')
+		group by t.waiter_type 
+		
+    </select>
+    
+    <select id="getAllOrderNum" parameterType="com.zxpublic.vo.SWaiterOrderInfo" resultMap="BaseResultMap">
+         SELECT
+			t.waiter_type,COUNT(t.waiter_type) as allNumber
+		FROM
+			tb_waiter_order_info t
+		group by t.waiter_type
+    </select>
+    <!-- 获取异常订单的区间数量和总数量 -->
+    <select id="getAbnormalOrderNum" parameterType="com.zxpublic.vo.SWaiterOrderInfo" resultMap="BaseResultMap">
+        SELECT
+			count(1) as IntervalNumber ,(select count(1) from tb_waiter_order_info s where s.serve_state = 4) as allNumber
+			from tb_waiter_order_info t
+		where serve_state = 4
+		  AND date_format(t.start_time,'%Y-%m-%d') BETWEEN str_to_date(#{sTime}, '%Y-%m-%d') AND str_to_date(#{eTime}, '%Y-%m-%d')
+    </select>
+    
+    <select id="getDayNum" parameterType="com.zxpublic.vo.SWaiterOrderInfo" resultType="int">
+        select count(1) from tb_waiter_order_info t 
+        where 1=1
+          and date_format(t.start_time,'%y-%m-%d') = str_to_date(#{dateStr}, '%Y-%m-%d')
+    </select>
+    <!--查询操作记录-->
+    <select id="queryOrderList" parameterType="com.zxpublic.vo.SWaiterOrderInfo"  resultMap="BaseResultMap">
+       select * from tb_waiter_order_info
+         where 1 = 1
+         <if test=" null != waiterType and '' != waiterType">
+             AND waiter_type = #{waiterType} 
+        </if>
+         <if test=" null != userName and '' != userName">
+             AND user_name like concat('%',#{userName},'%')
+        </if>
+         <if test=" null != serveState and '' != serveState">
+             AND serve_state = #{serveState} 
+        </if>
+         order by duty_time desc
+          limit #{startIndex},#{pageSize}
+        <!--startIndex开始页 ， pageSize每页显示的记录条数-->
+    </select>
+
+    <!--查询总记录条数-->
+    <select id="queryOrderCount" resultType="int" parameterType="com.zxpublic.vo.ServeInfo">
+       select count(1) from tb_waiter_order_info
+        where 1=1
+        <if test=" null != waiterType and '' != waiterType">
+             AND waiter_type = #{waiterType} 
+        </if>
+         <if test=" null != userName and '' != userName">
+             AND user_name like concat('%',#{userName},'%')
+        </if>
+         <if test=" null != serveState and '' != serveState">
+             AND serve_state = #{serveState} 
+        </if>
+	         <!-- <if test=" null != content and '' != content">
+	             AND d.dish_name like concat('%',#{content},'%') 
+	        </if> -->
+    </select>
+    
+        
+     <!-- 查当前最大订单号 -->
+    <select id="selectMaxNum" resultType="String">
+        SELECT order_num FROM	(SELECT	*	FROM tb_waiter_order_info ORDER BY	order_num DESC) tb_waiter_order_info GROUP BY id ORDER BY order_num DESC LIMIT 1
+    </select>
+    
+    <!-- 更新服务订单状态 -->
+    <update id="updateServe" parameterType="com.zxpublic.vo.SWaiterOrderInfo">
+        update tb_waiter_order_info set serve_state = #{serveState} where id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zxpublic.dao.SWaiterChattingDao" >
+  <resultMap id="BaseResultMap" type="com.zxpublic.vo.SWaiterChatting" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="BIGINT" />
+    <result column="chatting_content" property="chattingContent" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />   
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.zxpublic.vo.SWaiterChatting" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_waiter_chatting (user_name, user_phone, chatting_content, open_id)
+    values (#{userName,jdbcType=VARCHAR}, #{userPhone,jdbcType=BIGINT}, 
+      #{chattingContent,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR})
+  </insert>
+</mapper>
